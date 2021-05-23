@@ -1,32 +1,23 @@
 import http from 'http';
+import fs from 'fs';
 
-const server = http.createServer(function(req, res) {
+const server = http.createServer(function (req, res) {
   console.log(req.url);
 
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', '*'); 
+  res.setHeader('Access-Control-Allow-Methods', '*');
 
-  if (req.url === '/main.js') {
+  if (req.url.match(/\.js$/)) {
+    const fileStream = fs.createReadStream(`./assets${req.url}`);
     res.writeHead(200, {
       'Content-type': 'text/javascript'
     });
-    res.write(`
-      function soma(a, b) {
-        return a + b;
-      }
-      console.log('Oi galera!', soma(10, 5));
-    `);
-  } else if (req.url === '/style.css') {
-    res.writeHead(200, {
-      'Content-type': 'text/css',
-    });
-    res.write(`
-      h1 { color: red; }
-    `);
+    fileStream.pipe(res);
   } else {
     res.writeHead(200, {
       'Content-type': 'text/html',
-    })
+    });
+  
     res.write(`
       <!DOCTYPE html>
       <html lang="en">
@@ -39,12 +30,12 @@ const server = http.createServer(function(req, res) {
       </head>
       <body>
         <h1>Olá raizeros!!!</h1>
-        <script src="main.js"></script>
+        <script type="module" src="main.js"></script>
       </body>
       </html>
     `);
+    res.end();
   }
-  res.end();
 });
 
 server.listen(9000, function(err) {

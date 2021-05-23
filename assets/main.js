@@ -1,4 +1,4 @@
-import data from './data/restaurants.js';
+import data from '/restaurants.js';
 
 // Colocar como chave um identificador para acesso rápido
 // Desaninhar a estrutura
