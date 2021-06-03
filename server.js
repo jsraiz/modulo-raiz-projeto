@@ -1,6 +1,8 @@
 import http from 'http';
 import fs from 'fs';
 
+import data from './assets/data.js';
+
 const server = http.createServer(function (req, res) {
   console.log(req.url);
 
@@ -29,7 +31,24 @@ const server = http.createServer(function (req, res) {
         <link rel="stylesheet" href="style.css" />
       </head>
       <body>
-        <h1>Olá raizeros!!!</h1>
+        ${Array.from(data.menus.values()).slice(0, 3).map(function(menu) {
+          return `
+            <div class="cardapio">
+              <header>
+                <h3>${menu.title} - ${data.restaurants.get(menu.restaurantId).name}</h3>
+              </header>
+              <div class="cardapio-body">
+                <ul>
+                  ${menu.sections.map(function(section) {
+                    return `
+                      <li>${section.title}</li>
+                    `
+                  }).join('')}
+                </ul>
+              </div>
+            </div>
+          `
+        }).join('')}
         <script type="module" src="main.js"></script>
       </body>
       </html>

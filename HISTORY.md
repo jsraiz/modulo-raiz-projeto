@@ -1,3 +1,5 @@
+## 1.1.3
+  * Renderizando cardápios no back com string
 ### 1.1.2
   * Servindo JS de forma estática
   * Aula 15 do módulo Raiz
