@@ -1,3 +1,6 @@
+### 1.1.7
+  * Visão geral da function el
+  * Abstração acima da dom api
 ### 1.1.6
   * Renderizando com dom api
 ### 1.1.5
