@@ -1,3 +1,6 @@
+### 1.1.5
+  * Renderizando no front com string
+  * Restante dos cardápios
 ### 1.1.4
   * Renderizando cardápios no back com template ejs
 
