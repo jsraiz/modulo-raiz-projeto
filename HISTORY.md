@@ -1,3 +1,5 @@
+### 1.1.6
+  * Renderizando com dom api
 ### 1.1.5
   * Renderizando no front com string
   * Restante dos cardápios
