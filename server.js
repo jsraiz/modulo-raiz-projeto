@@ -3,6 +3,8 @@ import fs from 'fs';
 
 import data from './assets/data.js';
 
+import ejs from 'ejs';
+
 const server = http.createServer(function (req, res) {
   console.log(req.url);
 
@@ -19,41 +21,30 @@ const server = http.createServer(function (req, res) {
     res.writeHead(200, {
       'Content-type': 'text/html',
     });
+
+    const dataTpl = {
+      menus: Array.from(data.menus.values())
+        .slice(0, 3)
+        .map(function(menu) {
+          return {
+            ...menu,
+            restaurant: {
+              name: data.restaurants.get(menu.restaurantId).name
+            }
+          }
+        })
+    };
   
-    res.write(`
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>JS Raiz</title>
-        <link rel="stylesheet" href="style.css" />
-      </head>
-      <body>
-        ${Array.from(data.menus.values()).slice(0, 3).map(function(menu) {
-          return `
-            <div class="cardapio">
-              <header>
-                <h3>${menu.title} - ${data.restaurants.get(menu.restaurantId).name}</h3>
-              </header>
-              <div class="cardapio-body">
-                <ul>
-                  ${menu.sections.map(function(section) {
-                    return `
-                      <li>${section.title}</li>
-                    `
-                  }).join('')}
-                </ul>
-              </div>
-            </div>
-          `
-        }).join('')}
-        <script type="module" src="main.js"></script>
-      </body>
-      </html>
-    `);
-    res.end();
+    ejs.renderFile('./templates/index.ejs', dataTpl, function(err, str){
+      if (err) {
+        console.error(err);
+      }
+
+      console.log(str);
+
+      res.write(str);
+      res.end();
+    });
   }
 });
 

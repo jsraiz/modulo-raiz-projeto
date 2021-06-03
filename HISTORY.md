@@ -1,4 +1,7 @@
-## 1.1.3
+### 1.1.4
+  * Renderizando cardápios no back com template ejs
+
+### 1.1.3
   * Renderizando cardápios no back com string
 ### 1.1.2
   * Servindo JS de forma estática

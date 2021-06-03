@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JS Raiz</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <% menus.forEach(function(menu) { %>
+      <div class="cardapio">
+        <header>
+          <h3><%= menu.title %> - <%= menu.restaurant.name %></h3>
+        </header>
+        <div class="cardapio-body">
+          <ul>
+            <% menu.sections.forEach(function(section) { %>
+              <li><%= section.title %></li>
+            <% }) %>
+          </ul>
+        </div>
+      </div>
+    <% }) %>
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
