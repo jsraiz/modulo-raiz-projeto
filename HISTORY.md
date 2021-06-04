@@ -1,3 +1,6 @@
+### 1.1.8
+  * Implementando function el - parte 1
+  * function el gerando tags com DOM API
 ### 1.1.7
   * Visão geral da function el
   * Abstração acima da dom api

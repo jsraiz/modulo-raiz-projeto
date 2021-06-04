@@ -1,13 +1,45 @@
 import data from './data.js';
 
-function el() {}
+function isChildren (childrens) {
+  return Array.isArray(childrens) || typeof childrens === 'string'
+}
+
+function el(tagName, attrsArr, childrensArr) {
+  /**
+   * Se o segundo argumento (attrs) for um array, significa que não temos atributos
+   * Se o segundo argumento (attrs) for uma string, significa que não temos atributos
+   * Os filhos podem ser ou array ou string
+   * Se o segundo argumento for um objeto, significa que temos atributos
+  */
+
+  const $el = document.createElement(tagName);
+  const childrens = ( isChildren(attrsArr) ) ? attrsArr : childrensArr;
+
+  const attrs = !isChildren(attrsArr) ? attrsArr : {};
+
+  Object.entries(attrs).forEach(function([ key, value ]) {
+    $el.setAttribute(key, value);
+  })
+
+  if (typeof childrens === 'string') {
+    $el.appendChild(
+      document.createTextNode(childrens)
+    );
+  } else {
+    for (let $children of childrens) {
+      $el.appendChild($children);
+    }
+  }
+
+  return $el;
+}
 
 function tplCardapio(menu) {
-  return el('div.cardapio', [
+  return el('div', [
     el('header', [
       el('h3', { style: 'color: red' }, `${menu.title} - ${menu.restaurant.name}`)
     ]),
-    el('div.cardapio-body', [
+    el('div', [
       el('ul', menu.sections.map(function(section) {
         return el('li', section.title)
       }))
