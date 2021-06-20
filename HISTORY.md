@@ -1,3 +1,5 @@
+### 1.1.11
+  * Extraindo classes e id da tagName e definindo elas no elemento
 ### 1.1.10
   * Extraindo nome da tag quando passa com classes e id
 ### 1.1.9

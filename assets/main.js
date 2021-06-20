@@ -25,8 +25,23 @@ function normalizeChildrens (childrens) {
 }
 
 function extractTagName (tagName) {
-  // div#card.card.cardapio
   return tagName.match(/^\w+/)[0];
+}
+
+function extractClassesAndId (tagName) {
+  // div#card.card.cardapio
+  const regexp = /[\#\.]{1}([\w\-\_]*)/gi;
+  
+  return Array.from(tagName.matchAll(regexp))
+    .reduce(function(acc, current) {
+      if (current[0].startsWith('.')) {
+        acc.classes.push(current[1]);
+      } else {
+        acc.id.push(current[1]);
+      }
+
+      return acc;
+    }, { classes: [], id: [] });
 }
 
 function el(tagName, attrsArr, childrensArr) {
@@ -38,6 +53,17 @@ function el(tagName, attrsArr, childrensArr) {
   */
 
   const $el = document.createElement(extractTagName(tagName));
+
+  const { classes, id } = extractClassesAndId(tagName);
+
+  if (id.length) {
+    $el.id = id.pop();
+  }
+
+  if (classes.length) {
+    $el.classList.add(...classes);
+  }
+
   const childrens = ( isChildren(attrsArr) ) ? attrsArr : childrensArr;
 
   const attrs = !isChildren(attrsArr) ? attrsArr : {};
@@ -58,10 +84,10 @@ function el(tagName, attrsArr, childrensArr) {
 
 function tplCardapio(menu) {
   return el('div#card.card.cardapio', [
-    el('header', [
-      el('h3', { style: 'color: red' }, `${menu.title} - ${menu.restaurant.name}`)
+    el('header.card-header', [
+      el('h3.card-title', { style: 'color: red' }, `${menu.title} - ${menu.restaurant.name}`)
     ]),
-    el('div', [
+    el('div#cardBody.card-body', [
       el('ul', menu.sections.map(function(section) {
         return el('li', section.title)
       }))
