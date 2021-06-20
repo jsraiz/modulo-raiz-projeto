@@ -1,6 +1,7 @@
+### 1.1.10
+  * Extraindo nome da tag quando passa com classes e id
 ### 1.1.9
   * Corrigindo function el para array de filhos que contém texto 
-
 ### 1.1.8
   * Implementando function el - parte 1
   * function el gerando tags com DOM API

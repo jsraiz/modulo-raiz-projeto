@@ -24,6 +24,11 @@ function normalizeChildrens (childrens) {
   return childrens;
 }
 
+function extractTagName (tagName) {
+  // div#card.card.cardapio
+  return tagName.match(/^\w+/)[0];
+}
+
 function el(tagName, attrsArr, childrensArr) {
   /**
    * Se o segundo argumento (attrs) for um array, significa que não temos atributos
@@ -32,7 +37,7 @@ function el(tagName, attrsArr, childrensArr) {
    * Se o segundo argumento for um objeto, significa que temos atributos
   */
 
-  const $el = document.createElement(tagName);
+  const $el = document.createElement(extractTagName(tagName));
   const childrens = ( isChildren(attrsArr) ) ? attrsArr : childrensArr;
 
   const attrs = !isChildren(attrsArr) ? attrsArr : {};
@@ -52,14 +57,9 @@ function el(tagName, attrsArr, childrensArr) {
 }
 
 function tplCardapio(menu) {
-  return el('div', [
+  return el('div#card.card.cardapio', [
     el('header', [
-      el('h3', { style: 'color: red' }, `${menu.title} - ${menu.restaurant.name}`),
-      el('div', [
-        el('span', 'Oii'),
-        'Mundo',
-        el('strong', '!!!')
-      ])
+      el('h3', { style: 'color: red' }, `${menu.title} - ${menu.restaurant.name}`)
     ]),
     el('div', [
       el('ul', menu.sections.map(function(section) {
