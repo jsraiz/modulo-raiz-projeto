@@ -1,3 +1,6 @@
+### 1.1.12
+  * Alterando estrutura de pasta para renderização intermediária da function el
+
 ### 1.1.11
   * Extraindo classes e id da tagName e definindo elas no elemento
 ### 1.1.10

@@ -5,6 +5,8 @@ import data from './assets/data.js';
 
 import ejs from 'ejs';
 
+import CardCardapio from './assets/components/CardCardapio.js';
+
 const server = http.createServer(function (req, res) {
   console.log(req.url);
 
@@ -34,13 +36,13 @@ const server = http.createServer(function (req, res) {
           }
         })
     };
+
+    // console.log(CardCardapio(dataTpl.menus[0]))
   
     ejs.renderFile('./templates/index.ejs', dataTpl, function(err, str){
       if (err) {
         console.error(err);
       }
-
-      console.log(str);
 
       res.write(str);
       res.end();
