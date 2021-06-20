@@ -4,6 +4,26 @@ function isChildren (childrens) {
   return Array.isArray(childrens) || typeof childrens === 'string'
 }
 
+const isString = value => typeof value === 'string';
+
+const toArray = value => Array.isArray(value) ? value : [value];
+
+function normalizeChildrens (childrens) {
+  if (isString(childrens)) {
+    return document.createTextNode(childrens)
+  }
+
+  if (Array.isArray(childrens)) {
+    return childrens.map($children => (
+      isString($children)
+        ? document.createTextNode($children)
+        : $children
+    ))
+  }
+
+  return childrens;
+}
+
 function el(tagName, attrsArr, childrensArr) {
   /**
    * Se o segundo argumento (attrs) for um array, significa que não temos atributos
@@ -21,15 +41,12 @@ function el(tagName, attrsArr, childrensArr) {
     $el.setAttribute(key, value);
   })
 
-  if (typeof childrens === 'string') {
-    $el.appendChild(
-      document.createTextNode(childrens)
-    );
-  } else {
-    for (let $children of childrens) {
+  const $childrens = normalizeChildrens(childrens);
+
+  toArray($childrens)
+    .forEach(($children) => {
       $el.appendChild($children);
-    }
-  }
+    })
 
   return $el;
 }
@@ -37,7 +54,12 @@ function el(tagName, attrsArr, childrensArr) {
 function tplCardapio(menu) {
   return el('div', [
     el('header', [
-      el('h3', { style: 'color: red' }, `${menu.title} - ${menu.restaurant.name}`)
+      el('h3', { style: 'color: red' }, `${menu.title} - ${menu.restaurant.name}`),
+      el('div', [
+        el('span', 'Oii'),
+        'Mundo',
+        el('strong', '!!!')
+      ])
     ]),
     el('div', [
       el('ul', menu.sections.map(function(section) {
