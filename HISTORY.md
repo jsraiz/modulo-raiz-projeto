@@ -1,3 +1,6 @@
+### 1.1.13
+  * Gerando estrutura DOM em memória através da function el
+  * Function el gerando intermediário
 ### 1.1.12
   * Alterando estrutura de pasta para renderização intermediária da function el
 

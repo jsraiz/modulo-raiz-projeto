@@ -17,8 +17,9 @@ Array.from(data.menus.values())
     }
   })
   .forEach(function(menu) {
-    $fragment.appendChild(CardCardapio(menu))
+    console.log(JSON.stringify(CardCardapio(menu)));
+    // $fragment.appendChild(CardCardapio(menu))
   })
 
-$cardapios.appendChild($fragment);
+// $cardapios.appendChild($fragment);
 
