@@ -9,22 +9,7 @@
   </head>
   <body>
     <div id="app">
-      <div class="cardapios">
-        <% menus.forEach(function(menu) { %>
-          <div class="cardapio">
-            <header>
-              <h3><%= menu.title %> - <%= menu.restaurant.name %></h3>
-            </header>
-            <div class="cardapio-body">
-              <ul>
-                <% menu.sections.forEach(function(section) { %>
-                  <li><%= section.title %></li>
-                <% }) %>
-              </ul>
-            </div>
-          </div>
-        <% }) %>
-      </div>
+      <%- App() %>
     </div>
     <script type="module" src="main.js"></script>
   </body>

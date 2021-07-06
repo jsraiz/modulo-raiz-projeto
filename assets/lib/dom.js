@@ -57,7 +57,7 @@ export default function el(tag, attrsArr, childrensArr) {
     attrs.classNames = classes;
   }
 
-  const childrens = ( isChildren(attrsArr) ) ? attrsArr : childrensArr;
+  const childrens = toArray((isChildren(attrsArr) ) ? attrsArr : childrensArr);
 
   return {
     tagName,
@@ -65,6 +65,34 @@ export default function el(tag, attrsArr, childrensArr) {
     attrs,
     childrens: childrens ? childrens : []
   };
+}
+
+export function renderServer(node) {
+  // '<div class="card"><h1>Olá mundo</h1></div>'
+  // <img />
+  if (isString(node)) {
+    return node;
+  }
+
+  const { tagName, attrs, childrens } = node;
+
+  const attrsHTML = Object.entries(attrs).map(function(attr) {
+    const values = Array.isArray(attr[1]) ? attr[1].join(' ') : attr[1];
+    return `${attr[0]}="${values}"`
+  })
+  .join(' ')
+  .replaceAll('classNames', 'class');
+
+  const startTag = `<${tagName}${attrsHTML && ' '}${attrsHTML}>`;
+  const endTag = `</${tagName}>`;
+
+  const childrensHTML = childrens.map(function(children) {
+    return renderServer(children);
+  }).join('');
+
+  const html = `${startTag}${childrensHTML}${endTag}`;
+
+  return html;
 }
 
 /**

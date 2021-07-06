@@ -7,6 +7,8 @@ import ejs from 'ejs';
 
 import CardCardapio from './assets/components/CardCardapio.js';
 
+import el, { renderServer } from './assets/lib/dom.js';
+
 const server = http.createServer(function (req, res) {
   console.log(req.url);
 
@@ -24,20 +26,29 @@ const server = http.createServer(function (req, res) {
       'Content-type': 'text/html',
     });
 
-    const dataTpl = {
-      menus: Array.from(data.menus.values())
-        .slice(0, 3)
-        .map(function(menu) {
-          return {
-            ...menu,
-            restaurant: {
-              name: data.restaurants.get(menu.restaurantId).name
-            }
-          }
-        })
-    };
+    /**
+     * 
+     */
 
-    // console.log(CardCardapio(dataTpl.menus[0]))
+    const menus = Array.from(data.menus.values())
+      .slice(0, 3)
+      .map(function(menu) {
+        return {
+          ...menu,
+          restaurant: {
+            name: data.restaurants.get(menu.restaurantId).name
+          }
+        }
+      });
+
+
+    const dataTpl = {
+      App() {
+        return menus.map(function(menu) {
+          return renderServer(CardCardapio(menu))
+        }).join('');
+      } 
+    };
   
     ejs.renderFile('./templates/index.ejs', dataTpl, function(err, str){
       if (err) {
