@@ -76,9 +76,9 @@ export function renderServer(node) {
 
   const { tagName, attrs, childrens } = node;
 
-  const attrsHTML = Object.entries(attrs).map(function(attr) {
-    const values = Array.isArray(attr[1]) ? attr[1].join(' ') : attr[1];
-    return `${attr[0]}="${values}"`
+  const attrsHTML = Object.entries(attrs).map(function([ attrKey, attrValue ]) {
+    const values = Array.isArray(attrValue) ? attrValue.join(' ') : attrValue;
+    return `${attrKey}="${values}"`
   })
   .join(' ')
   .replaceAll('classNames', 'class');
@@ -93,6 +93,31 @@ export function renderServer(node) {
   const html = `${startTag}${childrensHTML}${endTag}`;
 
   return html;
+}
+
+export function render(node) {
+  // '<div class="card"><h1>Olá mundo</h1></div>'
+  // <img />
+  if (isString(node)) {
+    return document.createTextNode(node);
+  }
+
+  const { tagName, attrs, childrens } = node;
+
+  const $element = document.createElement(tagName);
+
+  Object.entries(attrs).forEach(function([attrKey, attrValue]) {
+    const values = Array.isArray(attrValue) ? attrValue.join(' ') : attrValue;
+    $element.setAttribute(attrKey.replaceAll('classNames', 'class'), values)
+  })
+
+  childrens.forEach(function(children) {
+    $element.appendChild(
+      render(children)
+    )
+  });
+
+  return $element;
 }
 
 /**

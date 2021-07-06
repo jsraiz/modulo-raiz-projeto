@@ -1,3 +1,5 @@
+### 1.1.15
+  * Criando componente Fragment
 ### 1.1.14
   * Renderizando HTML no servidor a partir do intermediário el
 ### 1.1.13

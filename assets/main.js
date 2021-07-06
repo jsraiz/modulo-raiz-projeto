@@ -2,7 +2,9 @@ import data from './data.js';
 
 import CardCardapio from './components/CardCardapio.js';
 
-const $cardapios = document.querySelector('.cardapios');
+import el, { render } from './lib/dom.js';
+
+const $cardapios = document.querySelector('#app');
 
 const $fragment = document.createDocumentFragment();
 
@@ -17,9 +19,9 @@ Array.from(data.menus.values())
     }
   })
   .forEach(function(menu) {
-    console.log(JSON.stringify(CardCardapio(menu)));
-    // $fragment.appendChild(CardCardapio(menu))
+    $fragment.appendChild(
+      render(CardCardapio(menu))
+    )
   })
 
-// $cardapios.appendChild($fragment);
-
+$cardapios.appendChild($fragment);
