@@ -7,7 +7,7 @@ import ejs from 'ejs';
 
 import CardCardapio from './assets/components/CardCardapio.js';
 
-import el, { renderServer } from './assets/lib/dom.js';
+import el, { renderServer, Fragment } from './assets/lib/dom.js';
 
 const server = http.createServer(function (req, res) {
   console.log(req.url);
@@ -44,9 +44,7 @@ const server = http.createServer(function (req, res) {
 
     const dataTpl = {
       App() {
-        return menus.map(function(menu) {
-          return renderServer(CardCardapio(menu))
-        }).join('');
+        return renderServer(el(Fragment, menus.map(CardCardapio)))
       } 
     };
   

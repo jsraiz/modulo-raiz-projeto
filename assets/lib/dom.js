@@ -43,6 +43,10 @@ function extractClassesAndId (tagName) {
 }
 
 export default function el(tag, attrsArr, childrensArr) {
+  if (typeof tag === 'function') {
+    return tag(attrsArr);
+  }
+
   const tagName = extractTagName(tag);
 
   const { classes, id } = extractClassesAndId(tag);
@@ -68,11 +72,13 @@ export default function el(tag, attrsArr, childrensArr) {
 }
 
 export function renderServer(node) {
-  // '<div class="card"><h1>Olá mundo</h1></div>'
-  // <img />
   if (isString(node)) {
     return node;
   }
+
+  if (node.nodeType === 'fragment') {
+    return node.childrens.map(renderServer).join('');
+  };
 
   const { tagName, attrs, childrens } = node;
 
@@ -104,7 +110,9 @@ export function render(node) {
 
   const { tagName, attrs, childrens } = node;
 
-  const $element = document.createElement(tagName);
+  const $element = (node.nodeType === 'fragment')
+    ? document.createDocumentFragment()
+    : document.createElement(tagName);
 
   Object.entries(attrs).forEach(function([attrKey, attrValue]) {
     const values = Array.isArray(attrValue) ? attrValue.join(' ') : attrValue;
@@ -118,6 +126,15 @@ export function render(node) {
   });
 
   return $element;
+}
+
+export function Fragment (childrens) {
+  return {
+    tagName: null,
+    nodeType: 'fragment',
+    attrs: {},
+    childrens: childrens ? childrens : []
+  }
 }
 
 /**
