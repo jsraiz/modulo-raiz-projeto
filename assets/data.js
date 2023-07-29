@@ -17,6 +17,7 @@ const newData = data.reduce((acc, { menus, ...restaurant }) => ({
 
 const restaurants = new Map(newData.restaurants);
 const menus = new Map(newData.menus);
+console.log('newData', newData)
 
 export default {
   restaurants,

@@ -6,6 +6,15 @@ const isString = value => typeof value === 'string';
 
 const toArray = value => Array.isArray(value) ? value : [value];
 
+const customs = [];
+
+export const registerCustomRender = (customRender) => {
+  customs.push({
+    type: customRender.type,
+    ...customRender.initialize({ defaultRender: render })
+  });
+}
+
 function normalizeChildrens (childrens) {
   if (isString(childrens)) {
     return document.createTextNode(childrens)
@@ -43,8 +52,19 @@ function extractClassesAndId (tagName) {
 }
 
 export default function el(tag, attrsArr, childrensArr) {
+  const ref = Math.floor(Math.random() * Date.now()).toString(16);
+
+  const childrens = toArray((isChildren(attrsArr) ) ? attrsArr : childrensArr);
+  
+
+  childrens.forEach(children => {
+    if (typeof children !== 'string') {
+      children.parentRef = ref;
+    }
+  })
+
   if (typeof tag === 'function') {
-    return tag(attrsArr);
+    return tag(attrsArr, childrens, { ref });
   }
 
   const tagName = extractTagName(tag);
@@ -61,14 +81,14 @@ export default function el(tag, attrsArr, childrensArr) {
     attrs.classNames = classes;
   }
 
-  const childrens = toArray((isChildren(attrsArr) ) ? attrsArr : childrensArr);
-
   return {
-    tagName,
+    ref,
+    childrens: childrens ? childrens : [],
+    parentRef: null,
+    tagName: tagName,
     nodeType: 'element',
-    attrs,
-    childrens: childrens ? childrens : []
-  };
+    attrs: attrs,
+  }
 }
 
 export function renderServer(node) {
@@ -101,16 +121,25 @@ export function renderServer(node) {
   return html;
 }
 
-export function render(node) {
+export function render(node, parentNodeRef) {
   // '<div class="card"><h1>Olá mundo</h1></div>'
   // <img />
+  if (node.nodeType === 'custom') {
+    const customRenderFound = customs.find(customRender => customRender.type === node.customType);
+    console.log('customRenderFound', customRenderFound, node);
+    return customRenderFound.onEachRender({
+      node,
+      parentNodeRef
+    })
+  };
+
   if (isString(node)) {
     return document.createTextNode(node);
   }
 
   const { tagName, attrs, childrens } = node;
 
-  const $element = (node.nodeType === 'fragment')
+  const $element = (node.nodeType === 'fragment') // Permitir estender
     ? document.createDocumentFragment()
     : document.createElement(tagName);
 
@@ -121,15 +150,17 @@ export function render(node) {
 
   childrens.forEach(function(children) {
     $element.appendChild(
-      render(children)
+      render(children, $element)
     )
   });
 
   return $element;
 }
 
-export function Fragment (childrens) {
+export function Fragment (attrs, childrens, extraOptions) {
   return {
+    ref: extraOptions?.ref,
+    parentRef: null,
     tagName: null,
     nodeType: 'fragment',
     attrs: {},

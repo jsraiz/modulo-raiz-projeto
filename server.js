@@ -59,10 +59,10 @@ const server = http.createServer(function (req, res) {
   }
 });
 
-server.listen(9000, function(err) {
+server.listen(9001, function(err) {
   if (err) {
     console.error(err);
   }
 
-  console.log('Servidor rodando na porta 9000');
+  console.log('Servidor rodando na porta 9001');
 });
